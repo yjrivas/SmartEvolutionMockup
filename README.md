@@ -31,13 +31,16 @@ Para ejecutar la maqueta en tu máquina local, sigue estos pasos:
 
 2. Navega al directorio del proyecto:
 
-   ```cd SmartEvolutionMockup
+   ```bash
+   cd SmartEvolutionMockup
    
 3. Instala las dependencias:
 
 3.1 Si estás trabajando con Next.js:
 
-``npm install
+   ```bash
+   npm install
+
 3.2 O si usas yarn:
 
 ```yarn install
