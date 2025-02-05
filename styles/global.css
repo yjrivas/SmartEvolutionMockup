@@ -1,0 +1,387 @@
+:root {
+  /* Colores primarios */
+  --primary-color: #488b8f;
+  --secondary-color: #3c7071;
+  --white-color: #ffffff;
+
+  /* Colores adicionales */
+  --text-color: #333;
+  --border-color: #ccc;
+  --focus-shadow: rgba(72, 139, 143, 0.5);
+
+  /* Transiciones */
+  --transition-duration: 0.3s;
+}
+
+
+/* Estilos globales para los componentes */
+
+/* Tipografía */
+body {
+    font-family: "Roboto", sans-serif;
+    color: -var(--text-color);
+    font-size: 14px;
+  }
+  
+  /* Contenedor principal */
+  .container {
+    height: 600px;
+    width: 100%;
+    position: relative;
+  }
+  /* Contenedor principal de la página */
+  .page-container {
+    padding: 2rem;
+    color: var(--primary-color);
+  }
+
+  /* Encabezado */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.header-title {
+  margin: 0;
+  font-size: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Botón */
+.button-primary {
+  background-color: var(--primary-color);
+  color: var(--white-color);
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color var(--transition-duration);
+}
+
+.button-primary:hover {
+  background-color: var(--secondary-color);
+}
+
+/* Botón de icono */
+.icon-button {
+  color: var(--primary-color);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  transition: color var(--transition-duration);
+}
+
+.icon-button:hover {
+  color: var(--secondary-color);
+}
+
+  
+  
+  /* Tipografía y texto */
+  .typography-small {
+    font-size: 0.75rem;
+  }
+  
+  .typography-medium {
+    font-size: 0.9rem;
+  }
+  
+  .typography-large {
+    font-size: 1rem;
+  }
+  
+  /* Colores */
+  .primary-color {
+    color: -var(--primary-color);
+  }
+  
+  .secondary-color {
+    color: -var(--secondary-color);
+  }
+  
+  .primary-bg {
+    background-color:var(--primary-color);
+  }
+  
+  .secondary-bg {
+    background-color: var(--secondary-color);
+  }
+  
+  .white-text {
+    color: var(--white-color);
+  }
+  
+  /* Botones */
+  .button {
+    padding: 8px 16px;
+    border-radius: 4px;
+    text-transform: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  
+  .button-primary {
+    background-color: var(--primary-color);
+    color: var(--white-color);
+  }
+  
+  .button-primary:hover {
+    background-color: var(--secondary-color);
+  }
+  
+  .button-outline {
+    border: 1px solid --primary-color;
+    color: var(--primary-color);
+    background-color: transparent;
+  }
+  
+  .button-outline:hover {
+    color: var(--white-color);
+    background-color: var(--secondary-color);
+    border-color: var(--primary-color);
+  }
+  
+  .icon-button {
+    color: var(--primary-color);
+    padding: 4px;
+  }
+  
+  .icon-button:hover {
+    background-color: transparent;
+  }
+  
+  /* Input de texto */
+  .text-input {
+    font-size: 0.9rem;
+  }
+  
+  /* Barra de búsqueda */
+  .search-bar {
+    padding: 8px;
+    flex-grow: 1;/* La barra de búsqueda ocupa todo el espacio disponible */
+    margin-right: 16px;
+    border: 1px solid var(--primary-color);
+    border-radius: 4px;
+    min-width: 200px; /* Establece un ancho mínimo para la barra de búsqueda */
+    max-width: 800px; /* Ajusta el ancho al contenido */
+    outline: none; /* Elimina el borde alrededor del input al hacer clic en él */
+    transition: all var(--transition-duration) ease; /* Agrega una transición suave al cambiar los estilos */
+  }
+
+  .search-bar:focus {
+    border-color: var(--secondary-color); /* Oscurece el color del borde en el foco */
+    box-shadow: 0 0 5px rgba(72, 139, 143, 0.5); /* Añade un efecto de sombra suave */
+    background-color: var(--white-color); /* Evita que el fondo cambie */
+  }
+  
+  /* Contenedor de filtros y botones */
+  .search-and-actions-container {
+    display: flex;
+    align-items: center;  /* Alineación vertical de los elementos */
+    justify-content: space-between;  /* Alineación horizontal: Distribuye los elementos con el máximo espacio posible entre ellos */
+    width: 100%; /* Asegura que el contenedor ocupe todo el ancho disponible */
+    gap: 16px;  /* Espacio entre los elementos */
+    margin-bottom: 10px;  /* Margen inferior */
+    flex-wrap: wrap;  /* Permitir que los elementos se acomoden cuando no haya espacio suficiente */
+  }
+  
+  
+  .date-picker-container {
+    margin-right: 16px;
+  }
+  
+  .button-outline {
+    border: 2px solid var(--primary-color);
+    color: var(--primary-color);
+    background-color: transparent;
+  }
+  /* Estilos para los botones */
+  .button {
+    background-color: var(--primary-color);
+    color: var(--white-color);
+    border: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    text-transform: none;
+  }
+  
+  .button:hover {
+    background-color: var(--secondary-color);
+  }
+  
+  .context-menu {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.5rem;
+    padding: 0;
+  }
+  
+  .context-menu:hover {
+    color: var(--secondary-color);
+  }
+  
+  /* Estilos para AdvancedDateRangePicker */
+  .date-range-picker {
+    border: 1px solid var(--primary-color);
+    border-radius: 4px;
+    padding: 12px;
+    max-width: 375px;
+  }
+  
+  .date-range-picker-compact {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px;
+    cursor: pointer;
+  }
+  
+  .date-range-picker-expanded {
+    margin-top: 16px;
+  }
+  
+  .quick-filter-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  /* Grillas y espaciados */
+  .grid-container {
+    display: grid;
+    grid-gap: 16px;
+  }
+  
+  .grid-item {
+    flex: 1;
+  }
+  
+  .apply-button {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 12px;
+  }
+
+  /* global.css */
+.badge {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  padding: 5px 15px;
+  border-radius: 6px;
+  border: 1px solid transparent;
+  color: white;
+  font-weight: 500;
+  text-transform: capitalize;
+  font-size: 14px;
+  margin-bottom: 12px;
+  line-height: 1;
+  min-width: 100px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.badge.por-aprobar {
+  background-color: #ff9800; /* Naranja para 'Por aprobar' */
+}
+
+.badge.aprobado {
+  background-color: #4caf50; /* Verde para 'Aprobado' */
+}
+
+.badge.rechazado {
+  background-color: #f44336; /* Rojo para 'Rechazado' */
+}
+
+/* global.css o el archivo específico de los estilos del modal */
+
+/* Modal Maximizada */
+.modal-container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  width: 400px;
+  z-index: 1300; /* Asegura que esté sobre otros elementos */
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #ddd;
+  margin-bottom: 10px;
+}
+
+.modal-header h2 {
+  font-size: 18px;
+  color: var(--primary-color);
+  margin: 0;
+}
+
+.modal-body {
+  display: flex;
+  flex-direction: column;
+}
+
+.modal-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.modal-column {
+  flex: 1;
+}
+
+.modal-column p {
+  margin: 5px 0;
+  font-size: 0.9rem;
+  color: #333;
+}
+
+.modal-column p strong {
+  color: var(--primary-color);
+}
+
+/* Modal Minimizada */
+.modal-minimized {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #f5f5f5;
+  border-top: 1px solid #ddd;
+  padding: 10px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 1200; /* Debajo de la modal principal */
+  box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.modal-minimized-content {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.modal-minimized-content p {
+  margin: 0;
+  font-size: 14px;
+  color: #333;
+}
+
+.modal-minimized-content p strong {
+  color: var(--secondary-color);
+}
