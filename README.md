@@ -28,3 +28,22 @@ Para ejecutar la maqueta en tu máquina local, sigue estos pasos:
 
    ```bash
    git clone https://github.com/yjrivas/SmartEvolutionMockup.git
+
+2. Navega al directorio del proyecto:
+
+   ```cd SmartEvolutionMockup
+   
+3. Instala las dependencias:
+
+3.1 Si estás trabajando con Next.js:
+
+``npm install
+3.2 O si usas yarn:
+
+```yarn install
+4. Ejecuta el proyecto en modo desarrollo:
+
+```npm run dev
+O si usas yarn:
+yarn dev
+Abre tu navegador y ve a http://localhost:3000 para ver la maqueta en acción.
