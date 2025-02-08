@@ -15,7 +15,6 @@ import InfoIcon from '@mui/icons-material/Info';
 
 
 const emisores = ['Emisor A', 'Emisor B', 'Emisor C'];
-const corredores = ['Corredor A', 'Corredor B', 'Corredor C'];
 // Relación Emisor-Corredor
 const corredorPorEmisor = {
   'Emisor A': 'Corredor A',
@@ -30,7 +29,7 @@ const corredorPorInversionista = {
   'Inversionista Z': 'Corredor C',
 };
 const inversionistas = ['Inversionista X', 'Inversionista Y', 'Inversionista Z'];
-const tipoOperaciones = ['Compra Título', 'Venta', 'Transferencia'];
+const tipoOperaciones = ['Compra Título', 'Lorem Ipsum', 'Lorem Ipsum'];
 
 // Simulación de correlativo (luego se obtendrá del backend)
 const getNextOperationNumber = () => 1001; // Ejemplo: siempre empieza en 1001
@@ -141,7 +140,18 @@ const validationSchema = Yup.object({
   ),
 });
 
+
 const RegisterOperationForm = () => {
+
+  const [] = useState([
+    { id: 1, titulo: "Factura 1", contenido: "Detalles de Factura 1" }
+  ]);
+  const [expanded, setExpanded] = useState(0); // Primer acordeón abierto por defecto
+
+  const handleChange = (index) => (_event, isExpanded) => {
+    setExpanded(isExpanded ? index : false);
+  };
+
   const initialValues = {
     numeroOperacion: getNextOperationNumber(), // Valor por defecto (correlativo)
     fechaOperacion: new Date(), // Fecha actual por defecto
@@ -167,6 +177,7 @@ const RegisterOperationForm = () => {
       },
     ],
   };
+
 
   const [openModal, setOpenModal] = useState(false);
 
@@ -248,6 +259,13 @@ const calcularPorcentajeDescuento = (valorFuturo, valorNominal) => {
   if (valorFuturo === 0) return 0;
   return ((1 - valorNominal / valorFuturo) * 100).toFixed(2);
 };
+
+//Formatear la fecha en la cabecera del acordeon. 
+const formatDate = (date) => {
+  if (!date) return "N/A";
+  const options = { day: "2-digit", month: "short", year: "numeric" };
+  return new Date(date).toLocaleDateString("es-ES", options);
+};
   
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={esLocale}>
@@ -262,12 +280,11 @@ const calcularPorcentajeDescuento = (valorFuturo, valorNominal) => {
         validationSchema={validationSchema}
         onSubmit={handleSubmit}>
           {/* {({ values, setFieldValue, touched, errors, handleBlur }) => ( */}
-          {({ values, setFieldValue, isSubmitting, isValid, touched, errors, handleBlur }) => (
+          {({ values, setFieldValue, touched, errors, handleBlur }) => (
             <Form>
-              <Grid container spacing={3}>
+              <Grid container spacing={2}>
                 {/* Primera fila: Número de Operación, Fecha de Operación y Tipo de Operación */}
-                <Grid item xs={12} md={2}>
-
+                <Grid item xs={12} md={1.5}>
                   <TextField
                     label="Número de Operación *"
                     fullWidth
@@ -290,7 +307,7 @@ const calcularPorcentajeDescuento = (valorFuturo, valorNominal) => {
                     </Typography>
                   )}
                 </Grid>
-                <Grid item xs={12} md={2}>
+                <Grid item xs={12} md={1.5}>
                   <DatePicker
                     label="Fecha de Operación *"
                     value={values.fechaOperacion}
@@ -313,7 +330,7 @@ const calcularPorcentajeDescuento = (valorFuturo, valorNominal) => {
                 </Grid>
 
                 {/* Campo de Emisor */}
-                <Grid item xs={12} md={6}>
+                <Grid item xs={12} md={4}>
                   <Autocomplete
                     options={emisores}
                     onChange={async (event, newValue) => {
@@ -344,7 +361,7 @@ const calcularPorcentajeDescuento = (valorFuturo, valorNominal) => {
                   />
                 </Grid>
                 {/*Selector de Corredor Emisor */}
-                <Grid item xs={12} md={6}>
+                <Grid item xs={12} md={3}>
                   <Autocomplete
                     options={[corredorPorEmisor[values.nombreEmisor]]} // Solo muestra el corredor asignado al emisor
                     value={values.corredorEmisor} // El valor ya asignado del corredor
@@ -362,23 +379,6 @@ const calcularPorcentajeDescuento = (valorFuturo, valorNominal) => {
                     )}
                   />
                 </Grid>
-
-                {/*Selector de Pagadores*/}
-                <Grid item xs={12} md={6}>
-                  <Autocomplete
-                    options={emisores}
-                    onChange={(event, newValue) => setFieldValue('nombrePagador', newValue)}
-                    renderInput={(params) => (
-                      <TextField {...params}
-                       label="Nombre Pagador *" 
-                       fullWidth
-                       error={touched.nombrePagador && Boolean(errors.nombrePagador)}
-                        helperText={touched.nombrePagador && errors.nombrePagador}
-                       />
-                    )}
-                    
-                  />
-                </Grid>
                 {/*Array para cada acordeon de facturas de la operacion */}
                 <FieldArray name="facturas">
                   {({ push, remove }) => (
@@ -390,11 +390,26 @@ const calcularPorcentajeDescuento = (valorFuturo, valorNominal) => {
                             
                             {/* Acordeón */}
                             <Grid item xs>
-                              <Accordion>
+                              <Accordion
+                              key={factura.id} 
+                              expanded={expanded === index} 
+                              onChange={handleChange(index)}>
                                 <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                                <Grid container alignItems="center" spacing={2}>
+                                {/* Número de factura de la cabecera del acordeon */}
+                                <Grid item>
                                   <Typography>
-                                    {factura.factura || `Factura ${index + 1}`} {/* Muestra la factura seleccionada o un título predeterminado */}
+                                    {factura.factura || `Factura ${index + 1}`}
                                   </Typography>
+                                </Grid>
+                                {/* Fecha de emisión y vencimiento de la cabecera del acordeon*/}
+                                <Grid item>
+                                  <Typography variant="body2" color="textSecondary">
+                                    Emisión: {factura.fechaEmision ? formatDate(factura.fechaEmision) : "-- -- ----"} | 
+                                    Vencimiento: {factura.fechaFin ? formatDate(factura.fechaFin) : "-- -- ----"}
+                                  </Typography>
+                                </Grid>
+                              </Grid>
                                 </AccordionSummary>
                                 <AccordionDetails>
                                   <Grid container spacing={3}>
@@ -432,36 +447,8 @@ const calcularPorcentajeDescuento = (valorFuturo, valorNominal) => {
                                         )}
                                       />
                                     </Grid>
-
-                                      {/* Saldo Disponible de la factura */}
-                                      <Grid item xs={12} md={4}>
-                                        <TextField
-                                          label="Saldo Disponible en factura"
-                                          fullWidth
-                                          value={formatCurrency(values.facturas[index]?.saldoDisponible || 0)}
-                                          disabled
-                                        />
-                                      </Grid>
-                                      {/* Fecha de Emisión */}
-                                      <Grid item xs={12} md={2.5}>
-                                        <DatePicker
-                                          label="Emisión factura"
-                                          value={factura.fechaEmision}
-                                          onChange={(newValue) => setFieldValue(`facturas[${index}].fechaEmision`, newValue)}
-                                          renderInput={(params) => <TextField {...params} fullWidth />}
-                                        />
-                                      </Grid>
-                                      {/* Fecha de Vencimiento */}
-                                      <Grid item xs={12} md={2.5}>
-                                        <DatePicker
-                                          label="Vencimiento Factura"
-                                          value={factura.fechaFin}
-                                          onChange={(newValue) => setFieldValue(`facturas[${index}].fechaFin`, newValue)}
-                                          renderInput={(params) => <TextField {...params} fullWidth />}
-                                        />
-                                      </Grid>
-                                      {/* Fracción */}
-                                      <Grid item xs={12} md={1}>
+                                    {/* Fracción */}
+                                    <Grid item xs={12} md={1}>
                                         <TextField
                                           label="Fracción"
                                           fullWidth
@@ -483,8 +470,36 @@ const calcularPorcentajeDescuento = (valorFuturo, valorNominal) => {
                                           error={touched.facturas?.[index]?.fraccion && Boolean(errors.facturas?.[index]?.fraccion)}  // Mostrar errores si es necesario
                                         />
                                       </Grid>
+
+                                      {/* Saldo Disponible de la factura */}
+                                      <Grid item xs={12} md={3}>
+                                        <TextField
+                                          label="Saldo Disponible en factura"
+                                          fullWidth
+                                          value={formatCurrency(values.facturas[index]?.saldoDisponible || 0)}
+                                          disabled
+                                        />
+                                      </Grid>
+                                       {/* Fecha Probable*/}
+                                      <Grid item xs={12} md={1.5}>
+                                        <DatePicker
+                                          label="Fecha probable"
+                                          value={factura.fechaEmision}
+                                          onChange={(newValue) => setFieldValue(`facturas[${index}].fechaEmision`, newValue)}
+                                          renderInput={(params) => <TextField {...params} fullWidth />}
+                                        />
+                                      </Grid> 
+                                      {/* Fecha de Vencimiento */}
+                                      {/* <Grid item xs={12} md={2}>
+                                        <DatePicker
+                                          label="Vencimiento Factura"
+                                          value={factura.fechaFin}
+                                          onChange={(newValue) => setFieldValue(`facturas[${index}].fechaFin`, newValue)}
+                                          renderInput={(params) => <TextField {...params} fullWidth />}
+                                        /> */}
+                                      {/* </Grid> */} 
                                       {/* Nombre de Inversionista */}
-                                      <Grid item xs={12} md={6}>
+                                      <Grid item xs={12} md={4.5}>
                                         <Autocomplete
                                           options={inversionistas}
                                           onChange={async (event, newValue) => {
@@ -541,6 +556,22 @@ const calcularPorcentajeDescuento = (valorFuturo, valorNominal) => {
                                           disabled // Deshabilita la edición manual
                                         />
                                       </Grid>
+                                    {/*Selector de Pagadores*/}
+                                    <Grid item xs={12} md={6}>
+                                      <Autocomplete
+                                        options={emisores}
+                                        onChange={(event, newValue) => setFieldValue('nombrePagador', newValue)}
+                                        renderInput={(params) => (
+                                          <TextField {...params}
+                                          label="Nombre Pagador *" 
+                                          fullWidth
+                                          error={touched.nombrePagador && Boolean(errors.nombrePagador)}
+                                            helperText={touched.nombrePagador && errors.nombrePagador}
+                                          />
+                                        )}
+                                        
+                                      />
+                                    </Grid>
                                     {/* Valor Futuro */}
                                     <Grid item xs={12} md={3} style={{ position: 'relative' }}>
                                       <TextField
@@ -624,7 +655,7 @@ const calcularPorcentajeDescuento = (valorFuturo, valorNominal) => {
                                       </Tooltip>
                                     </Grid>
                                     {/* Campo de porcentaje de descuento */}
-                                    <Grid item xs={12} md={2} style={{ position: 'relative' }}>
+                                    <Grid item xs={12} md={1} style={{ position: 'relative' }}>
                                       <TextField
                                         label="% Descuento"
                                         fullWidth
@@ -674,6 +705,16 @@ const calcularPorcentajeDescuento = (valorFuturo, valorNominal) => {
                                           <InfoIcon style={{ fontSize: '1rem', color: 'rgb(94, 163, 163)' }} />
                                         </IconButton>
                                       </Tooltip>
+                                    </Grid>
+                                    {/*Tasa Descuento */}
+                                    <Grid item xs={12} md={2}>
+                                      <TextField
+                                        label="Tasa Descuento"
+                                        fullWidth
+                                        type="number"
+                                        value={factura.tasaInversionista}
+                                        onChange={(e) => setFieldValue(`facturas[${index}].tasaInversionista`, e.target.value)}
+                                      />
                                     </Grid>
 
                                     {/* Campo de valor nominal */}
@@ -736,7 +777,7 @@ const calcularPorcentajeDescuento = (valorFuturo, valorNominal) => {
                                         error={touched.facturas?.[index]?.valorNominal && Boolean(errors.facturas?.[index]?.valorNominal)}
                                       />
                                     </Grid>
-                                    <Grid item xs={12} md={2}>
+                                    <Grid item xs={12} md={1.5}>
                                       <TextField
                                         label="Tasa Inversionista"
                                         fullWidth
@@ -745,7 +786,7 @@ const calcularPorcentajeDescuento = (valorFuturo, valorNominal) => {
                                         onChange={(e) => setFieldValue(`facturas[${index}].tasaInversionista`, e.target.value)}
                                       />
                                     </Grid>
-                                    <Grid item xs={12} md={2}>
+                                    <Grid item xs={12} md={1.5}>
                                       <DatePicker
                                         label="Fecha Fin"
                                         value={factura.fechaFin}
