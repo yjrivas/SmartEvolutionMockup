@@ -13,7 +13,7 @@ import { sampleDataPreOperations } from "../../data/mockData";
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import Link from 'next/link';
-import SearchBar from "./searchBar";
+import SearchBar from "../searchBar";
 
 // Lógica de filtrado
 const useFilteredOperations = (search) => {
