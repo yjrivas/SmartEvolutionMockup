@@ -1,19 +1,17 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
-import AdvancedDateRangePicker from "../AdvancedDateRangePicker";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
-import { Menu, MenuItem, IconButton, Collapse, Table, TableBody, TableCell, TableHead, TableRow, Paper, Typography, TableContainer, Tooltip } from "@mui/material";
+import { Collapse, IconButton, Menu, MenuItem, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Tooltip, Typography } from "@mui/material";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
+import AdvancedDateRangePicker from "../AdvancedDateRangePicker";
 import CustomPagination from "../CustomPagination";
 //import ClearIcon from "@mui/icons-material/Clear";
 import DocumentIcon from '@mui/icons-material/Description';
-import { sampleData } from "../../data/mockData";
-import ModalValorAGirar from "../../components/ValoragirarModal/ModalValorAGirar";
-import mockData from "../ValoragirarModal/mockData"; // Ruta corregida
-import { sampleDataPreOperations } from "../../data/mockData";
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import Link from 'next/link';
-import SearchBar from "../searchBar";
+import ModalValorAGirar from "../../components/ValoragirarModal/ModalValorAGirar";
+import { sampleData } from "../../data/mockData";
+import SearchBar from "./searchbar";
 
 // Lógica de filtrado
 const useFilteredOperations = (search) => {
@@ -150,7 +148,7 @@ const OperacionesPorGrupo = () => {
   const [openRowId, setOpenRowId] = useState(null); // Estado para manejar el colapso
   const [page, setPage] = useState(0);
   const [pageSize, setPageSize] = useState(10);
-  // const [rowCount, setRowCount] = useState(sampleData.length);
+  const [rowCount, setRowCount] = useState(sampleData.length);
   const [loading, setLoading] = useState(false);
   const filteredData = useFilteredOperations(search); // Usamos el hook para obtener las operaciones filtradas
   const [dateRange, setDateRange] = useState({ start: null, end: null });
