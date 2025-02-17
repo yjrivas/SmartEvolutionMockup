@@ -1,5 +1,5 @@
 import React from "react";
-import PreOperationsGroup from "../../src/components/preoperationsGroup/preoperationsGroup";
+import PreOperationsGroup from "../../src/components/preoperationsgroup/preoperationsgroup";
 import Link from "next/link";
 import HomeIcon from "@mui/icons-material/Home";
 
