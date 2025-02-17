@@ -16,12 +16,12 @@ const OperacionesPorGrupo  = () => (
   <div className="page-container">
     <div className="header">
       <h2 className="header-title">
-        <Link href="/" className="icon-button color-primary">
+        <Link href="/" passHref className="icon-button color-primary">
           <HomeIcon />
         </Link>
         Pre-Operaciones por grupo
       </h2>
-      <Link href="/operaciones">
+      <Link href="/operaciones" passHref>
         <button className="button-outline button-primary">Operaciones</button>
       </Link>
     </div>
