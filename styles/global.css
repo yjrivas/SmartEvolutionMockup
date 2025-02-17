@@ -51,6 +51,16 @@ body {
   gap: 8px;
 }
 
+/*para el collapse*/
+.subheader-title {
+  margin: 0;
+  font-size: 0.8rem; 
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--primary-color); 
+}
+
 /* Botón */
 .button-primary {
   background-color: var(--primary-color);
@@ -179,6 +189,7 @@ body {
     background-color: var(--white-color); /* Evita que el fondo cambie */
   }
   
+  
   /* Contenedor de filtros y botones */
   .search-and-actions-container {
     display: flex;
@@ -298,6 +309,19 @@ body {
 .badge.rechazado {
   background-color: #f44336; /* Rojo para 'Rechazado' */
 }
+
+.badge.vigente {
+  background-color: #0f58ac; /* Naranja para 'Vigente' */
+}
+
+.badge.cancelado {
+  background-color: #ff0000; /* rojo  para 'Cancelado' */
+}
+
+.badge.vencido {
+  background-color: #3f3f3f; /* Gris Naranja para 'Vencido' */
+}
+
 
 /* global.css o el archivo específico de los estilos del modal */
 

@@ -1,5 +1,5 @@
 import React from "react";
-import Operations from '../../src/components/Operation';
+import Operations from "../../src/components/Operations/Operation";
 import Link from "next/link";
 import HomeIcon from "@mui/icons-material/Home";
 

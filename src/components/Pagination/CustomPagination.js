@@ -11,15 +11,10 @@ const CustomPagination = ({
   page,
   pageCount,
   onPageChange,
-  rowsPerPageOptions = [5, 10, 15, 20], // Valores por defecto
+  rowsPerPageOptions,
   onRowsPerPageChange,
   rowsPerPage,
-  totalItems, // ✅ Recibe la cantidad total de elementos
 }) => {
-  // Calcular el rango de elementos mostrados
-  const startItem = page * rowsPerPage + 1;
-  const endItem = Math.min((page + 1) * rowsPerPage, totalItems);
-
   return (
     <Box
       display="flex"
@@ -37,24 +32,18 @@ const CustomPagination = ({
           onChange={(event) => onRowsPerPageChange(event.target.value)}
           size="small"
         >
-          {Array.isArray(rowsPerPageOptions) &&
-            rowsPerPageOptions.map((option) => (
-              <MenuItem key={option} value={option}>
-                {option}
-              </MenuItem>
-            ))}
+          {rowsPerPageOptions.map((option) => (
+            <MenuItem key={option} value={option}>
+              {option}
+            </MenuItem>
+          ))}
         </Select>
       </Box>
-
-      {/* ✅ Mostrar "5 de 10" con el rango de elementos */}
-      <Typography variant="body2">
-        {startItem} - {endItem} de {totalItems}
-      </Typography>
 
       {/* Paginación */}
       <Pagination
         count={pageCount}
-        page={page + 1} // MUI usa 1-based index
+        page={page + 1} // MUI Pagination es 1-based, pero DataGrid es 0-based
         onChange={(event, value) => onPageChange(value - 1)}
         showFirstButton
         showLastButton
@@ -62,8 +51,8 @@ const CustomPagination = ({
           <PaginationItem
             {...item}
             slots={{
-              first: FirstPageIcon,
-              last: LastPageIcon,
+              first: FirstPageIcon, // Ícono para el botón "Primera página"
+              last: LastPageIcon, // Ícono para el botón "Última página"
             }}
           />
         )}

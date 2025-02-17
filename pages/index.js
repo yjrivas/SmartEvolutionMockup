@@ -1,6 +1,12 @@
 import React from "react";
 import Link from "next/link";
 
+/**
+ * El componente del HomePage renderiza la pagina principal del prototipo de Smart Evolution.
+ * Este componente incluye un mensaje de bienvenida con botones de navegacion simples como accesos directos a las demas vistas.
+ *
+ * @returns {JSX.Element} La renderizacion del componente HomePage.
+ */
 const HomePage = () => (
   <div style={{ padding: "2rem", color: "#488b8f" }}>
     <h2>Prototipo Smart Evolution</h2>
@@ -29,42 +35,3 @@ const styles = {
 };
 
 export default HomePage;
-
-
-
-// import React from "react";
-// //import AdvancedDateRangePicker from "../src/components/AdvancedDateRangePicker";
-// import PreOperations from "../src/components/Pre-operation";
-// //import operation from "../src/components/Operation";
-
-// const HomePage = () => (
-//   <div style={{ padding: "2rem", color: "#488b8f" }}>
-//       <h2>Pre-Operaciones</h2>
-//       <PreOperations />
-//     </div>
-// );
-
-// export default HomePage;
-
-// import React from 'react';
-// import PreOperations from '../src/components/Pre-operation';
-
-// const HomePage =() => (
-//     <div div style={{ padding: '2rem' }}>
-//       <h1>Pre-operaciones</h1>
-//       <PreOperations />
-//     </div>
-//   );
-// export default HomePage;
-
-// import React from 'react';
-// import AdvancedDateRangePicker from '../src/components/AdvancedDateRangePicker';
-
-// const HomePage = () => (
-//   <div style={{ padding: '2rem' }}>
-//     <h1>Selector de Rango de Fechas</h1>
-//     <AdvancedDateRangePicker />
-//   </div>
-// );
-
-// export default HomePage;

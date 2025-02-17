@@ -270,6 +270,28 @@ const formatDate = (date) => {
   const options = { day: "2-digit", month: "short", year: "numeric" };
   return new Date(date).toLocaleDateString("es-ES", options);
 };
+
+// Primero, necesitamos agregar un estado para saber si el serial de la factura es nuevo
+const [isNewInvoice, setIsNewInvoice] = useState(false);
+
+// Lista de facturas registradas en el sistema (esto es un ejemplo, deberías obtenerlo de los datos del sistema)
+const registeredInvoices = ["12345", "67890", "54321"]; // Lista de seriales registrados (esto debería ser dinámico)
+
+// Función para verificar si el serial de la factura es nuevo
+const handleInvoiceSerialChange = (e, index) => {
+  const serial = e.target.value;
+  const isNew = !registeredInvoices.includes(serial); // Verifica si el serial está en la lista de facturas registradas
+  setIsNewInvoice(isNew); // Actualiza el estado si la factura es nueva
+
+  // Si es nueva, agregamos los campos adicionales
+  if (isNew) {
+    setFieldValue(`facturas[${index}].fechaEmision`, null); // Inicializar el valor de fecha de emisión
+    setFieldValue(`facturas[${index}].fechaVencimiento`, null); // Inicializar el valor de fecha de vencimiento
+    setFieldValue(`facturas[${index}].saldoDisponible`, 0); // Inicializar el saldo disponible
+    setFieldValue(`facturas[${index}].fechaProbable`, null); // Inicializar la fecha probable
+  }
+};
+
   
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={esLocale}>
@@ -417,40 +439,54 @@ const formatDate = (date) => {
                                 </AccordionSummary>
                                 <AccordionDetails>
                                   <Grid container spacing={3}>
-                                    {/**Selector de facturas */}
-                                    <Grid item xs={12} md={2}>
-                                      <Autocomplete
-                                        options={facturasFiltradas.map((factura) => factura.serial)}
-                                        value={factura.factura || null} // Asegurar que no retenga valores del emisor anterior
-                                        onChange={(event, newValue) => {
+                                 {/** Selector de Facturas */} 
+                                  <Grid item xs={12} md={2}>
+                                    <Autocomplete
+                                      options={facturasFiltradas.map((factura) => factura.serial)} // Facturas registradas
+                                      value={factura.factura || ''} // Valor de la factura seleccionada
+                                      onChange={(event, newValue) => {
+                                        if (newValue) {
+                                          // Si se selecciona una factura existente
                                           const selectedFactura = facturasFiltradas.find(
                                             (factura) => factura.serial === newValue
                                           );
                                           if (selectedFactura) {
-                                            setFieldValue(`facturas[${index}].factura`, newValue);
+                                            setFieldValue(`facturas[${index}].factura`, newValue); // Guardar serial seleccionado
                                             setFieldValue(`facturas[${index}].fechaEmision`, selectedFactura.fechaEmision);
                                             setFieldValue(`facturas[${index}].valorNominal`, selectedFactura.valorNominal);
                                             setFieldValue(`facturas[${index}].fechaFin`, selectedFactura.fechaFin);
-                                            setFieldValue(`facturas[${index}].saldoDisponible`, selectedFactura.monto); // Establecer el saldo disponible correctamente
+                                            setFieldValue(`facturas[${index}].saldoDisponible`, selectedFactura.monto); // Establecer saldo disponible
                                             
-                                            // Cálculo del valor futuro usando el saldo disponible y la fracción
+                                            // Cálculo del valor futuro
                                             const saldoDisponible = selectedFactura.monto || 0;
-                                            const fraccion = factura.fraccion || 1;  // Definir valor de fracción
-                                            const valorFuturoCalculado = saldoDisponible / fraccion;  // Cálculo directo
-                                            
-                                            // Establecer el valor futuro sin formateo (sin aplicar formato de moneda)
+                                            const fraccion = factura.fraccion || 1;
+                                            const valorFuturoCalculado = saldoDisponible / fraccion;
                                             setFieldValue(`facturas[${index}].valorFuturo`, valorFuturoCalculado);
+                                            
+                                            // Desactivar la opción de ingresar nuevos valores manualmente
+                                            setIsNewInvoice(false); // No es una nueva factura
                                           }
-                                        }}
-                                        renderInput={(params) => (
-                                          <TextField
-                                            {...params}
-                                            label="Número de Factura *"
-                                            fullWidth
-                                          />
-                                        )}
-                                      />
-                                    </Grid>
+                                        }
+                                      }}
+                                      renderInput={(params) => (
+                                        <TextField
+                                          {...params}
+                                          label="Número de Factura *"
+                                          fullWidth
+                                          onBlur={() => {
+                                            // Si no se selecciona una factura registrada, habilitar la opción de crear una nueva
+                                            if (!factura.factura) {
+                                              setIsNewInvoice(true);
+                                              setFieldValue(`facturas[${index}].fechaEmision`, null); 
+                                              setFieldValue(`facturas[${index}].fechaVencimiento`, null);
+                                              setFieldValue(`facturas[${index}].saldoDisponible`, 0); 
+                                              setFieldValue(`facturas[${index}].fechaProbable`, null); 
+                                            }
+                                          }}
+                                        />
+                                      )}
+                                    />
+                                  </Grid>
                                     {/* Fracción */}
                                     <Grid item xs={12} md={1}>
                                         <TextField
@@ -475,24 +511,58 @@ const formatDate = (date) => {
                                         />
                                       </Grid>
 
-                                      {/* Saldo Disponible de la factura */}
+                                      {/** Saldo Disponible en factura */} 
                                       <Grid item xs={12} md={3}>
                                         <TextField
                                           label="Saldo Disponible en factura"
                                           fullWidth
-                                          value={formatCurrency(values.facturas[index]?.saldoDisponible || 0)}
-                                          disabled
+                                          value={formatCurrency(isNewInvoice ? factura.saldoDisponible || 0 : values.facturas[index]?.saldoDisponible || 0)}
+                                          onChange={(e) => setFieldValue(`facturas[${index}].saldoDisponible`, e.target.value)} // Permitir cambio solo si es nueva factura
+                                          disabled={!isNewInvoice} // Deshabilitar si no es una nueva factura
                                         />
                                       </Grid>
-                                       {/* Fecha Probable*/}
+                                      {/* Campos adicionales si es una nueva factura */}
+                                      {isNewInvoice && (
+                                        <>
+                                          {/* Fecha de Emisión */}
+                                          <Grid item xs={12} md={3}>
+                                            <DatePicker
+                                              label="Fecha de Emisión"
+                                              value={factura.fechaEmision}
+                                              onChange={(newValue) => setFieldValue(`facturas[${index}].fechaEmision`, newValue)}
+                                              renderInput={(params) => <TextField {...params} fullWidth />}
+                                            />
+                                          </Grid>
+
+                                          {/* Fecha de Vencimiento */}
+                                          <Grid item xs={12} md={3}>
+                                            <DatePicker
+                                              label="Fecha de Vencimiento"
+                                              value={factura.fechaVencimiento}
+                                              onChange={(newValue) => setFieldValue(`facturas[${index}].fechaVencimiento`, newValue)}
+                                              renderInput={(params) => <TextField {...params} fullWidth />}
+                                            />
+                                          </Grid>
+                                        </>
+                                      )}
+
+
+                                      {/** Fecha Probable */}
                                       <Grid item xs={12} md={1.5}>
                                         <DatePicker
-                                          label="Fecha probable"
-                                          value={factura.fechaEmision}
-                                          onChange={(newValue) => setFieldValue(`facturas[${index}].fechaEmision`, newValue)}
+                                          label="Fecha Probable"
+                                          value={isNewInvoice ? factura.fechaProbable : factura.fechaEmision} // Si es nueva factura, permitir fecha probable, sino, usar fecha emisión
+                                          onChange={(newValue) => {
+                                            setFieldValue(
+                                              `facturas[${index}].${isNewInvoice ? "fechaProbable" : "fechaEmision"}`, 
+                                              newValue
+                                            );
+                                          }}
                                           renderInput={(params) => <TextField {...params} fullWidth />}
+                                          disabled={!isNewInvoice} // Deshabilitar si no es nueva factura
                                         />
-                                      </Grid> 
+                                      </Grid>
+
                                       {/* Fecha de Vencimiento */}
                                       {/* <Grid item xs={12} md={2}>
                                         <DatePicker

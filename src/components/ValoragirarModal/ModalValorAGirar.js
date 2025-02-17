@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Modal, Box, IconButton, Button } from '@mui/material';
+import { Modal, Box, IconButton } from '@mui/material';
 import ClearIcon from '@mui/icons-material/Clear';
 import MinimizeIcon from '@mui/icons-material/Minimize'; // Importar el ícono de minimizar
 import FullscreenIcon from '@mui/icons-material/Fullscreen'; // Ícono para maximizar
@@ -12,7 +12,7 @@ const ModalValorAGirar = ({ open, handleClose, data }) => {
     setIsMinimized(!isMinimized);
   };
 
-  // Usa `data` o datos de prueba (mockData) si no se pasa `data` como prop
+  // Usa `data` o `mockData` si no se pasa `data` como prop
   const effectiveData = data || mockData;
 
   return (
@@ -66,10 +66,7 @@ const ModalValorAGirar = ({ open, handleClose, data }) => {
             <p><strong>Valor Inversor:</strong> {effectiveData.valorInversor}</p>
             <p><strong>Facturar Neto:</strong> {effectiveData.facturarNeto}</p>
             <p><strong>Valor Futuro:</strong> {effectiveData.valorFuturo}</p>
-            <p><strong>Valor a Girar:</strong> {effectiveData.valorAGirar}</p>
-            
-            
-            
+
             <IconButton onClick={handleMinimize}>
               <FullscreenIcon /> {/* Ícono para maximizar */}
             </IconButton>
