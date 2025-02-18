@@ -1,117 +1,27 @@
 import { useState, useEffect, useMemo } from "react";
-import Image from "next/image";
-import Link from "next/link";
-import {
-  AppBar,
-  Avatar,
-  Box,
-  IconButton,
-  Menu,
-  MenuItem,
-  Toolbar,
-  Typography,
-  useMediaQuery,
-} from "@mui/material";
-import NotificationsIcon from "@mui/icons-material/Notifications";
+import { AppBar, Avatar, Box, IconButton, Menu, MenuItem, Toolbar, Typography } from "@mui/material";
 import { deepPurple } from "@mui/material/colors";
+import Notifications from "../components/notificaciones/notification"; // Importamos el componente Notifications
 
 const user = { name: "Yorvis" }; // Nombre del usuario
-const logout = () => console.log("Cerrando sesión..."); // Simulación de logout
 
-const navSpacingSx = {
-  backgroundColor: "#fff",
-  borderBottom: "1.4px solid #5EA3A380",
-  padding: "0% 5%",
-};
-
-const iconWrapperSx = {
-  width: 40,
-  height: 40,
-  display: "flex",
-  justifyContent: "center",
-  alignItems: "center",
-  color: "#488B8F",
-  fontSize: 24,
-};
-
-const imageWrapperSx = {
-  aspectRatio: "90/30",
-  width: "max(90px + 2vw, 45px)", // Ajusta el tamaño de la imagen
-};
-
-// Aquí se definen las animaciones en CSS
-const animations = {
-  "@keyframes fadeInSlide": {
-    "0%": {
-      opacity: 0,
-      transform: "translateY(-20px)",
+const Header = () => {
+  const [notifications, setNotifications] = useState([
+    {
+      id: 1,
+      title: "Factura vencida",
+      body: "La factura #3030303 del emisor 'Empresa XYZ' se ha vencido.",
+      timestamp: new Date(),
     },
-    "100%": {
-      opacity: 1,
-      transform: "translateY(0)",
+    {
+      id: 2,
+      title: "Factura vencida",
+      body: "La factura #3030304 del emisor 'Empresa ABC' se ha vencido.",
+      timestamp: new Date(),
     },
-  },
-  "@keyframes bounceIn": {
-    "0%": {
-      opacity: 0,
-      transform: "scale(0.3)",
-    },
-    "50%": {
-      opacity: 1,
-      transform: "scale(1.1)",
-    },
-    "100%": {
-      opacity: 1,
-      transform: "scale(1)",
-    },
-  },
-  "@keyframes blink": {
-    "0%": {
-      opacity: 1,
-    },
-    "50%": {
-      opacity: 0.5,
-    },
-    "100%": {
-      opacity: 1,
-    },
-  },
-};
+  ]);
 
-function Header() {
-  const [anchorEl, setAnchorEl] = useState(null);
-  const open = Boolean(anchorEl);
-  const downScale = useMediaQuery("(max-width: 1600px)");
-  const [currentTime, setCurrentTime] = useState(new Date());
-
-  useEffect(() => {
-    const interval = setInterval(() => setCurrentTime(new Date()), 1000);
-    return () => clearInterval(interval);
-  }, []);
-
-  // Insertar las animaciones en el documento (solo cuando el componente se monte)
-  useEffect(() => {
-    const styleSheet = document.styleSheets[0];
-    for (let animation in animations) {
-      const rule = `${animation} { ${Object.entries(animations[animation])
-        .map(([key, value]) => `${key}: ${value}`)
-        .join(";")} }`;
-      styleSheet.insertRule(rule, styleSheet.cssRules.length);
-    }
-  }, []);
-
-  // Formato de hora con segundos
-  const formattedTime = useMemo(() => {
-    return currentTime.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", second: "2-digit" });
-  }, [currentTime]);
-
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
+  const [newNotifications, setNewNotifications] = useState(2); // Cantidad de notificaciones nuevas
 
   const nameInitials = useMemo(
     () =>
@@ -122,58 +32,71 @@ function Header() {
     [user.name]
   );
 
-  return (
-    <AppBar elevation={0} position="relative" sx={navSpacingSx}>
-      <Toolbar disableGutters sx={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-        
-        {/* Logo importado desde S3 */}
-        <Link href="/" passHref>
-          <a>
-            <Box sx={imageWrapperSx}>
-              <Image
-                layout="responsive"
-                src="https://smartevolution.s3.amazonaws.com/assets/logo-smart.png" // URL del logo desde S3
-                width={120} // Ajusta el tamaño según sea necesario
-                height={40} // Ajusta el tamaño según sea necesario
-                alt="Logo Smart Evolution"
-              />
-            </Box>
-          </a>
-        </Link>
+  // Estados para controlar el menú del avatar
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [open, setOpen] = useState(false);
 
-        {/* Contenedor del mensaje de bienvenida alineado a la izquierda */}
-        <Box sx={{ display: "flex", alignItems: "center", marginLeft: "15px", gap: 2 }}>
-          <Typography
-            variant="h6"
-            sx={{
-              color: "#488B8F", // Color primario
-              fontWeight: "bold",
-              animation: "bounceIn 2s ease-in-out", // Animación de rebote
-            }}
-          >
+  // Estado para la hora
+  const [currentTime, setCurrentTime] = useState(new Date().toLocaleTimeString());
+
+  // Actualizar la hora cada segundo
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentTime(new Date().toLocaleTimeString());
+    }, 1000);
+
+    // Limpiar el intervalo cuando el componente se desmonte
+    return () => clearInterval(interval);
+  }, []);
+
+  // Manejar el clic en el avatar para abrir/cerrar el menú
+  const handleMenuClick = (event) => {
+    setAnchorEl(event.currentTarget); // Establecemos el ancla en el avatar
+    setOpen(true); // Abrimos el menú
+  };
+
+  // Cerrar el menú
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  // Manejar el clic en una notificación (puedes agregar lógica para abrir una vista detallada)
+  const handleNotificationClick = (notification) => {
+    console.log("Ver notificación completa", notification.id);
+    // Aquí puedes agregar la lógica para redirigir a la vista completa de la notificación
+  };
+
+  return (
+    <AppBar elevation={0} position="relative" sx={{ backgroundColor: "#fff", borderBottom: "1.4px solid #5EA3A380", padding: "0% 5%" }}>
+      <Toolbar disableGutters sx={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+
+        {/* Logo importado desde S3 */}
+        <Box sx={{ aspectRatio: "90/30", width: "max(90px + 2vw, 45px)" }}>
+          <img src="https://smartevolution.s3.amazonaws.com/assets/logo-smart.png" alt="Logo Smart Evolution" style={{ width: "100%", height: "auto" }} />
+        </Box>
+
+        {/* Mensaje de Bienvenida */}
+        <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+          <Typography variant="h6" sx={{ color: "#488B8F", fontWeight: "bold" }}>
             ¡Bienvenido, {user.name}!
           </Typography>
         </Box>
 
-        {/* Contenedor de la hora, alineado a la derecha cerca de las notificaciones */}
+        {/* Hora actual */}
         <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-          <Typography
-            variant="body1"
-            sx={{
-              color: "#555",
-              animation: "blink 1s infinite", // Aplicamos la animación de parpadeo a la hora
-            }}
-          >
-            {formattedTime}
+          <Typography variant="body1" sx={{ color: "#555" }}>
+            {currentTime}
           </Typography>
 
-          {/* Icono de Notificaciones */}
-          <IconButton>
-            <NotificationsIcon sx={iconWrapperSx} />
-          </IconButton>
+          {/* Componente de Notificaciones */}
+          <Notifications 
+            notifications={notifications}
+            newNotifications={newNotifications}
+            onNotificationClick={handleNotificationClick} 
+          />
 
           {/* Avatar del Usuario */}
-          <IconButton onClick={handleClick}>
+          <IconButton onClick={handleMenuClick}>
             <Avatar sx={{ bgcolor: deepPurple[500], cursor: "pointer" }}>
               {nameInitials}
             </Avatar>
@@ -182,20 +105,17 @@ function Header() {
           {/* Menú del Usuario */}
           <Menu
             id="user-menu"
-            anchorEl={anchorEl}
-            open={open}
-            onClose={handleClose}
-            MenuListProps={{ "aria-labelledby": "menu-button" }}
-            transformOrigin={{ horizontal: "right", vertical: "top" }}
-            anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
+            anchorEl={anchorEl} // Usamos anchorEl para anclar el menú al avatar
+            open={open} // El menú se abre si `open` es true
+            onClose={handleClose} // Cerramos el menú cuando se hace clic afuera
           >
             <MenuItem onClick={() => console.log("Ver Perfil")}>Ver Perfil</MenuItem>
-            <MenuItem onClick={logout}>Cerrar sesión</MenuItem>
+            <MenuItem onClick={() => console.log("Cerrar sesión")}>Cerrar sesión</MenuItem>
           </Menu>
         </Box>
       </Toolbar>
     </AppBar>
   );
-}
+};
 
 export default Header;

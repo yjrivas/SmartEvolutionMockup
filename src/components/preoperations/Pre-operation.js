@@ -241,6 +241,41 @@ const PreOperations = () => {
 
   const [rowsPerPage, setRowsPerPage] = useState(5); // ✅ Define rowsPerPage con un valor inicial
 
+  /* Experimento para exportar los datos del data grid a un archivo csv que pueda ser leido por Excel*/
+  const handleExportExcel = () => {
+    // Obtener los datos de las filas visibles en la página actual del DataGrid
+    const currentRows = rows; // Aquí, rows son los datos actuales de la página.
+  
+    // Generar los encabezados de las columnas
+    const columnHeaders = columns.map(col => col.headerName);
+  
+    // Convertir las filas de datos en formato CSV
+    const csvContent = [
+      columnHeaders.join(","), // Cabecera de las columnas
+      ...currentRows.map(row =>
+        columns.map(col => row[col.field] ? row[col.field] : "").join(",") // Filas de datos
+      ),
+    ].join("\n");
+  
+    // Crear un Blob con el contenido CSV
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+  
+    // Crear un enlace de descarga
+    const link = document.createElement("a");
+  
+    // Crear un URL para el Blob
+    const url = URL.createObjectURL(blob);
+    
+    // Configurar el enlace para que descargue el archivo CSV
+    link.setAttribute("href", url);
+    link.setAttribute("download", "datos_exportados.csv"); // Nombre del archivo
+  
+    // Simular un clic en el enlace para iniciar la descarga
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+  
   return (
     <div style={{ height: 600, width: "100%" }}>
       <div className="search-and-actions-container">
@@ -282,7 +317,9 @@ const PreOperations = () => {
           <MoreVertIcon />
         </IconButton>
         <Menu anchorEl={anchorEl} open={openMenu} onClose={handleCloseMenu}>
-          <MenuItem onClick={handleExportXML}>Exportar en Excel</MenuItem>
+        <MenuItem onClick={handleExportExcel}>
+          Exportar a CSV
+        </MenuItem>
         </Menu>
       </div>
 
