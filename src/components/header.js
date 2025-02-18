@@ -39,11 +39,6 @@ const imageWrapperSx = {
   width: "max(90px + 2vw, 45px)", // Ajusta el tamaño de la imagen
 };
 
-// Estilo de animación CSS
-const animationSx = {
-  animation: "fadeInSlide 2s ease-out", // Aparecer con deslizamiento
-};
-
 // Aquí se definen las animaciones en CSS
 const animations = {
   "@keyframes fadeInSlide": {
@@ -92,6 +87,17 @@ function Header() {
   useEffect(() => {
     const interval = setInterval(() => setCurrentTime(new Date()), 1000);
     return () => clearInterval(interval);
+  }, []);
+
+  // Insertar las animaciones en el documento (solo cuando el componente se monte)
+  useEffect(() => {
+    const styleSheet = document.styleSheets[0];
+    for (let animation in animations) {
+      const rule = `${animation} { ${Object.entries(animations[animation])
+        .map(([key, value]) => `${key}: ${value}`)
+        .join(";")} }`;
+      styleSheet.insertRule(rule, styleSheet.cssRules.length);
+    }
   }, []);
 
   // Formato de hora con segundos
