@@ -34,19 +34,19 @@ const CustomPagination = ({
         </Typography>
         <Select
           value={rowsPerPage}
-          onChange={(event) => onRowsPerPageChange(event.target.value)}
+          onChange={(event) => onRowsPerPageChange(parseInt(event.target.value, 10))} // ✅ Asegura que el valor es un número
           size="small"
         >
-          {Array.isArray(rowsPerPageOptions) &&
-            rowsPerPageOptions.map((option) => (
-              <MenuItem key={option} value={option}>
-                {option}
-              </MenuItem>
-            ))}
+          {rowsPerPageOptions.map((option) => (
+            <MenuItem key={option} value={option}>
+              {option}
+            </MenuItem>
+          ))}
         </Select>
+
       </Box>
 
-      {/* ✅ Mostrar "5 de 10" con el rango de elementos */}
+      {/* Mostrar "5 de 10" con el rango de elementos */}
       <Typography variant="body2">
         {startItem} - {endItem} de {totalItems}
       </Typography>
@@ -54,8 +54,8 @@ const CustomPagination = ({
       {/* Paginación */}
       <Pagination
         count={pageCount}
-        page={page + 1} // MUI usa 1-based index
-        onChange={(event, value) => onPageChange(value - 1)}
+        page={page + 1} // Ajustar índice para Material-UI
+        onChange={(_event, value) => onPageChange(value - 1)} //  Ajustar índice a DataGrid
         showFirstButton
         showLastButton
         renderItem={(item) => (
@@ -68,6 +68,7 @@ const CustomPagination = ({
           />
         )}
       />
+
     </Box>
   );
 };

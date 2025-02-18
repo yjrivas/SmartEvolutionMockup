@@ -293,16 +293,19 @@ const PreOperations = () => {
         paginationMode="server"
         rowCount={rowCount}
         loading={loading}
-        rowsPerPageOptions={[5, 10, 20, 50]}
+        page={page} // ✅ Mantiene la sincronización de la página
+        rowsPerPageOptions={[5, 10, 15, 20]} // ✅ Debe coincidir con CustomPagination
+        onPageChange={(newPage) => setPage(newPage)} // ✅ Sincroniza cambios de página
+        onPageSizeChange={(newPageSize) => setPageSize(newPageSize)} // ✅ Sincroniza cambios de filas por página
         components={{
-          Pagination: (props) => (
+          Pagination: () => (
             <CustomPagination
-              page={page} // Pasa la página actual
-              pageCount={Math.ceil(rowCount / pageSize)} // Calcula el número de páginas
-              onPageChange={setPage} // Función para cambiar la página
-              rowsPerPage={pageSize} // Tamaño de página actual
-              onRowsPerPageChange={setPageSize} // Función para cambiar las filas por página
-              totalItems={rowCount} // Número total de elementos
+              page={page} // ✅ Pasar la página actual
+              pageCount={Math.ceil(rowCount / pageSize)} // ✅ Calcula el total de páginas
+              onPageChange={setPage} // ✅ Cambia la página
+              rowsPerPage={pageSize} // ✅ Tamaño de página actual
+              onRowsPerPageChange={setPageSize} // ✅ Cambia la cantidad de filas por página
+              totalItems={rowCount} // ✅ Pasar el total de elementos
             />
           ),
         }}
