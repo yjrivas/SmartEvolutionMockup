@@ -45,7 +45,7 @@ const ReceiptRegisterForm = () => {
 
   return (
     <div style={{ padding: "20px", fontFamily: "Arial, sans-serif" }}>
-      <Typography variant="h4" gutterBottom>
+      <Typography variant="h4" gutterBottom className="header-title">
         Registrar Recaudo a la Operación: {id} {/* Aquí mostramos el id de la operación */}
       </Typography>
 

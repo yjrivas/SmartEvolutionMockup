@@ -353,6 +353,13 @@ body {
   margin: 0;
 }
 
+.modal-header h3 {
+  font-size: 18px;
+  color: var(--primary-color); /* Color primario para el texto */
+  margin: 0;
+  display: inline; /* Asegura que el texto y el número de operación estén en la misma línea */
+}
+
 .modal-body {
   display: flex;
   flex-direction: column;
@@ -408,4 +415,53 @@ body {
 
 .modal-minimized-content p strong {
   color: var(--secondary-color);
+}
+/*Modal de actualizacion de estado en preoperaciones*/
+
+
+.modal-actions {
+  display: flex;
+  justify-content: center; /* Centra los botones */
+  gap: 16px; /* Establece un margen de 16px entre los botones */
+  margin-top: 20px; /* Agrega un margen superior si es necesario */
+}
+
+.button-update-all,
+.button-outline {
+  padding: 10px 20px;
+  border-radius: 5px;
+}
+
+
+/* Botones para la modal de actualizar estado en preoperaciones */
+.operation-id {
+  color: var(--primary-color); /* Aplicamos el color primario */
+  font-weight: bold;
+  margin-left: 8px;
+}
+
+.button-update-all {
+  background-color: #BFBFBF; /* Gris claro */
+  color: var(--white-color); /* Blanco */
+  border: none;
+  padding: 8px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  text-transform: none;
+  transition: background-color var(--transition-duration), color var(--transition-duration);
+}
+
+.button-update-all:hover {
+  background-color: var(--primary-color); /* Cambia el fondo a color primario */
+  color: var(--white-color); /* La letra sigue siendo blanca */
+}
+
+.confirmation-text {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  text-align: center; /* Centra el texto */
+  color: var(--text-color); /* Color predeterminado para el texto */
+}
+
+.confirmation-text strong {
+  color: var(--primary-color); /* Aplica el color primario al texto de {status} */
 }

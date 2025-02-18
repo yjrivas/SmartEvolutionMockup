@@ -12,7 +12,22 @@ import { Tooltip } from "@mui/material";
 import ModalValorAGirar from "../ValoragirarModal/ModalValorAGirar";
 import mockData from "../ValoragirarModal/mockData"; // Ruta corregida
 import { sampleDataPreOperations } from "../../data/mockData"; 
+import UpdateStatusModal from "../preoperations/update/update";
+import DeleteModal from "../preoperations/delete/delete";
 
+/**
+ * El componente de PreOperations gestiona la visualizacion de los datos de preoperacions.
+ * Este componente incluye consultas a la api o datos de pruebas.
+ * y ejecuta acciones de actualizar estado, borrar operaciones de factura pero aun no tiene definidas las opciones de ver o editar.
+ *
+ * @component
+ * @example
+ * return (
+ *   <PreOperations />
+ * )
+ *
+ * @returns {JSX.Element} Renderiza el componente.
+ */
 const PreOperations = () => {
   const [rows, setRows] = useState(sampleDataPreOperations); // Usando los datos predefinidos como respaldo cuando no existe una API
   const [page, setPage] = useState(0);
@@ -26,6 +41,12 @@ const PreOperations = () => {
   const [openWindow, setOpenWindow] = useState(null);
   const [openModal, setOpenModal] = useState(false);
   const [selectedData, setSelectedData] = useState(mockData);
+  const [openUpdateModal, setOpenUpdateModal] = useState(false);
+  const [selectedOperation, setSelectedOperation] = useState(null);
+  const [currentStatus, setCurrentStatus] = useState("");
+  const [operationLabel, setOperationLabel] = useState("");
+  const [operationToDelete, setOperationToDelete] = useState(null);
+  const [openDeleteModal, setOpenDeleteModal] = useState(false);
 
   const handleOpenRegisterOperation = () => {
     if (openWindow && !openWindow.closed) {
@@ -39,7 +60,7 @@ const PreOperations = () => {
     }
   };
 
-const fetchData = async () => {
+  const fetchData = async () => {
     setLoading(true);
     try {
       const response = await axios.get("/api/preoperaciones", {
@@ -76,6 +97,33 @@ const fetchData = async () => {
     }
   };
 
+  const handleActionClick = (action, operation) => {
+    if (action === "Actualizar Estado") {
+      setSelectedOperation(operation.id); // Establecer el ID de la operación
+      setCurrentStatus(operation.estado);  // Establecer el estado actual
+      setOperationLabel(`Factura: ${operation.factura_fraccion}`); // Establecer el número de factura/fracción
+      setOpenUpdateModal(true); // Abrir el modal
+    }
+  };
+  
+
+  // Función que maneja la acción de eliminar
+  const handleDeleteOperation = (operationId) => {
+    setRows(rows.filter(row => row.id !== operationId)); // Filtrar las filas y eliminar la operación
+  };
+
+  const handleActionClickdelete = (action, operation) => {
+    if (action === "Eliminar") {
+      setOperationToDelete(operation); // Establecemos la operación seleccionada para eliminar
+      setOpenDeleteModal(true); // Abrimos el modal de confirmación
+    }
+  };
+
+  const handleCloseDeleteModal = () => {
+    setOpenDeleteModal(false); // Cerramos el modal sin hacer nada
+    setOperationToDelete(null); // Limpiar la operación seleccionada
+  };
+
   useEffect(() => {
     fetchData();
   }, [page, pageSize, search, dateRange]);
@@ -100,7 +148,6 @@ const fetchData = async () => {
         return <span className={badgeClass}>{params.value}</span>;
       },
     },
-    
     { field: "id", headerName: "ID", width: 80 },
     { field: "creado_el", headerName: "Creado el", width: 110 },
     { field: "factura_fraccion", headerName: "# Factura / Fracción", width: 90 },
@@ -132,6 +179,7 @@ const fetchData = async () => {
     { field: "Fecha Fin", headerName: "Fecha Fin", width: 110 },
     { field: "Acciones", headerName: "Acciones", width: 90,
       renderCell: (params) => {
+        const isOperationApproved = params.row.estado === "Aprobado";
         return (
           <div style={{ display: "flex", justifyContent: "center" }}>
             <Tooltip title="Crear o ver resumen de negociación" arrow>
@@ -146,16 +194,18 @@ const fetchData = async () => {
               <MoreVertIcon />
             </IconButton>
             <Menu anchorEl={anchorEl} open={openMenu} onClose={handleCloseMenu}>
-              <MenuItem onClick={() => handleActionClick("Actualizar Estado")}>
+              <MenuItem onClick={() => handleActionClick("Actualizar Estado", params.row)}>
                 Actualizar Estado
               </MenuItem>
               <MenuItem onClick={() => handleActionClick("Ver Operación")}>
                 Ver Operación
               </MenuItem>
               <MenuItem onClick={() => handleActionClick("Editar")}>Editar</MenuItem>
-              <MenuItem onClick={() => handleActionClick("Eliminar")}>
-                Eliminar
-              </MenuItem>
+              { !isOperationApproved && (
+                <MenuItem onClick={() => handleActionClickdelete("Eliminar", params.row)}>
+                  Eliminar
+                </MenuItem>
+              )}
             </Menu>
           </div>
         );
@@ -211,7 +261,6 @@ const fetchData = async () => {
           className="search-bar"
         />
         <div>
-          {/* Botón para redirigir a la página Por grupo */}
           <Link href="/pre-operaciones/operacionesporgrupo">
             <button className="button">
               Ver Por Grupo
@@ -237,7 +286,6 @@ const fetchData = async () => {
         </Menu>
       </div>
 
-      {/* DataGrid */}
       <DataGrid
         rows={rows}
         columns={columns}
@@ -272,7 +320,22 @@ const fetchData = async () => {
         }}
       />
 
+      <UpdateStatusModal
+        open={openUpdateModal}
+        handleClose={() => setOpenUpdateModal(false)}
+        operationId={selectedOperation}
+        currentStatus={currentStatus}
+        operationLabel={operationLabel} // Pasar el número de factura o fracción
+        onUpdate={(id, status) => console.log(`Actualizar operación ${id} a estado ${status}`)}
+      />
 
+
+      <DeleteModal
+        open={openDeleteModal}
+        onClose={handleCloseDeleteModal}
+        operationToDelete={operationToDelete}
+        onDelete={(id) => handleDeleteOperation(id)}
+      />
     </div>
   );
 };
